@@ -1,0 +1,76 @@
+{% extends 'teams/base.html' %} {% load static %} {% block content %}
+
+<div class="top-card">
+  <p>Search teams</p>
+
+  <form method="GET" class="filter-row">
+    <select name="department">
+      <option value="">Department</option>
+      <option value="xTV_Web" {% if department == 'xTV_Web' %}selected{% endif %}>xTV_Web</option>
+      <option value="Native TVs" {% if department == 'Native TVs' %}selected{% endif %}>Native TVs</option>
+      <option value="Mobile" {% if department == 'Mobile' %}selected{% endif %}>Mobile</option>
+      <option value="Reliability_Tool" {% if department == 'Reliability_Tool' %}selected{% endif %}>Reliability_Tool</option>
+      <option value="Arch" {% if department == 'Arch' %}selected{% endif %}>Arch</option>
+      <option value="Programme" {% if department == 'Programme' %}selected{% endif %}>Programme</option>
+    </select>
+
+    <select name="department_head">
+      <option value="">Department Head</option>
+      <option value="Sebastian Holt" {% if department_head == 'Sebastian Holt' %}selected{% endif %}>Sebastian Holt</option>
+      <option value="Nora Chandler" {% if department_head == 'Nora Chandler' %}selected{% endif %}>Nora Chandler</option>
+      <option value="Mason Briggs" {% if department_head == 'Mason Briggs' %}selected{% endif %}>Mason Briggs</option>
+      <option value="Violet Ramsey" {% if department_head == 'Violet Ramsey' %}selected{% endif %}>Violet Ramsey</option>
+      <option value="Adam Sinclair" {% if department_head == 'Adam Sinclair' %}selected{% endif %}>Adam Sinclair</option>
+      <option value="Lucy Vaughn" {% if department_head == 'Lucy Vaughn' %}selected{% endif %}>Lucy Vaughn</option>
+      <option value="Theodore Knox" {% if department_head == 'Theodore Knox' %}selected{% endif %}>Theodore Knox</option>
+      <option value="Bella Monroe" {% if department_head == 'Bella Monroe' %}selected{% endif %}>Bella Monroe</option>
+    </select>
+
+    <select name="sort">
+      <option value="az" {% if sort == 'az' %}selected{% endif %}>Sort by: A-Z</option>
+      <option value="za" {% if sort == 'za' %}selected{% endif %}>Sort by: Z-A</option>
+    </select>
+
+    <div class="search-form">
+      <input
+        type="text"
+        name="q"
+        placeholder="Search teams..."
+        value="{{ query|default:'' }}"
+      />
+      <button type="submit">Go</button>
+    </div>
+  </form>
+</div>
+
+{% for team in teams %}
+<div class="team-card">
+  <img src="{% static 'images/icon.webp' %}" class="avatar-img" />
+
+  <div class="team-info">
+    <div>
+      <h3>{{ team.name }}</h3>
+      <p>Department: {{ team.department }}</p>
+      <p>Team Leader: {{ team.team_leader }}</p>
+    </div>
+
+    <div class="card-footer">
+      <a href="{% url 'team_detail' team.id %}">
+        <button>View more details</button>
+      </a>
+    </div>
+  </div>
+</div>
+{% endfor %}
+<div class="pagination">
+  {% if teams.has_previous %}
+  <a href="?page={{ teams.previous_page_number }}{% if query_params %}&amp;{{ query_params }}{% endif %}">&laquo; Previous</a>
+  {% endif %}
+
+  <span> Page {{ teams.number }} of {{ teams.paginator.num_pages }} </span>
+
+  {% if teams.has_next %}
+  <a href="?page={{ teams.next_page_number }}{% if query_params %}&amp;{{ query_params }}{% endif %}">Next &raquo;</a>
+  {% endif %}
+</div>
+{% endblock %}
