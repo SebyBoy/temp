@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sky Engineering Portal{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            background: #f4f5f7;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* TOP NAVBAR */
+        .top-navbar {
+            background: #0d1b2a;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 25px;
+        }
+
+        .brand img {
+            height: 40px;
+        }
+
+        /* SEARCH */
+        .search-wrapper {
+            margin-left: 20px;
+            position: relative;
+            width: 300px;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            padding: 8px 12px 8px 35px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+        }
+
+        /* RIGHT SIDE */
+        .nav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-icon {
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-icon:hover {
+            color: #4da3ff;
+        }
+
+        .profile-circle {
+            background: #0066cc;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* SECOND NAVBAR */
+        .secondary-navbar {
+            background: #122035;
+            padding: 10px 25px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .secondary-navbar a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        /* HOVER */
+        .secondary-navbar a:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        /* ACTIVE */
+        .secondary-navbar a.active {
+            background: #0066cc;
+            color: white;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            padding: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- TOP NAVBAR -->
+<nav class="top-navbar">
+
+    <!-- LOGO -->
+    <a href="/reports/" class="brand">
+        <img src="{% static 'images/sky_logo.svg' %}" alt="Sky Logo">
+    </a>
+
+    <!-- SEARCH -->
+    <div class="search-wrapper">
+        <i class="bi bi-search"></i>
+        <form method="get" action="/reports/">
+            <input type="text" name="q" placeholder="Search teams...">
+        </form>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="nav-right">
+        <i class="bi bi-bell nav-icon"></i>
+        <i class="bi bi-envelope nav-icon"></i>
+        <i class="bi bi-box-arrow-right nav-icon"></i>
+
+        <div class="profile-circle">
+            B
+        </div>
+    </div>
+
+</nav>
+
+<!-- SECOND NAVBAR -->
+<nav class="secondary-navbar">
+
+    <a href="/reports/">
+        <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
+
+    <a href="/reports/">
+        <i class="bi bi-building"></i> Departments
+    </a>
+
+    <a href="/reports/">
+        <i class="bi bi-calendar-event"></i> Schedule
+    </a>
+
+    <a href="/reports/">
+        <i class="bi bi-people"></i> Teams
+    </a>
+
+    <a href="/reports/">
+        <i class="bi bi-diagram-3"></i> Organisation
+    </a>
+
+    <!-- ACTIVE PAGE -->
+    <a href="/reports/" class="active">
+        <i class="bi bi-bar-chart"></i> Reports
+    </a>
+
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
