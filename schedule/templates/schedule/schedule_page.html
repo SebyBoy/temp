@@ -1,7 +1,8 @@
+<!--blenda jasahri - w1976060 - student 4   -->
 {% extends 'base.html' %}
-
+<!-- Uses Django template inheritance (covered in Django lectures) -->
 {% block title %}Schedule{% endblock %}
-
+<!-- Custom CSS styling for the schedule page UI (based on UX/UI lecture principles) -->
 {% block extra_styles %}
 .schedule-title {
     background: #0b4edb;
@@ -93,23 +94,28 @@ button:hover, .view-button:hover {
 {% block content %}
 
 <h1 class="schedule-title">Schedule</h1>
+<!-- Page title displayed to the user -->
 
 <div class="schedule-layout">
-
+<!-- Flexbox layout used to structure page into sections -->
     <div class="schedule-card meetings-section">
         <h2>Upcoming Meetings</h2>
 
         <div class="filter-box">
             <form method="get">
+                <!-- GET request used to filter meetings by date (covered in Django forms handling) -->
                 <label>Filter by date:</label>
                 <input type="date" name="date" value="{{ filter_date }}">
+                <!-- Django template variable used to retain selected date -->
                 <button type="submit">Filter</button>
             </form>
         </div>
 
         {% for meeting in meetings %}
+        <!-- Django template loop to display dynamic data from the view -->
             <div class="meeting-item">
                 <p><strong>Host:</strong> {{ meeting.host }}</p>
+                <!-- Variables rendered dynamically from the database (Model → View → Template flow) -->
                 <p><strong>Title:</strong> {{ meeting.title }}</p>
                 <p><strong>Date:</strong> {{ meeting.meeting_date }}</p>
                 <p><strong>Time:</strong> {{ meeting.meeting_time }}</p>
@@ -121,6 +127,7 @@ button:hover, .view-button:hover {
             </div>
         {% empty %}
             <p>No upcoming meetings yet.</p>
+            <!-- handles case when no data is returned -->
         {% endfor %}
     </div>
 
@@ -128,8 +135,10 @@ button:hover, .view-button:hover {
         <h2>Create Meeting</h2>
 
         <form method="post">
+            <!-- CSRF protection to prevent cross-site request forgery attacks -->
             {% csrf_token %}
             {{ form.as_p }}
+            <!-- Django form automatically rendered (covered in tutorials) -->
             <button class="create-button" type="submit">Create</button>
         </form>
     </div>
@@ -137,3 +146,4 @@ button:hover, .view-button:hover {
 </div>
 
 {% endblock %}
+
