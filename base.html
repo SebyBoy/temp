@@ -1,0 +1,355 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> <!--to ensure all characters display correctly-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--ensures the page scales correctly on different screen sizes-->
+    <title>{% block title %}Sky Engineering Portal{% endblock %}</title> <!--block title allows child template override page title-->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> <!--bootstrap gives a responsive grid system with built ui components, it was in the brief to use bootstrap for front end-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet"> <!--bootstrap icons library used in the nav bar, making the nav bar look visually aesthetic as mentioned in lec3-->
+
+    <style>
+        * { box-sizing: border-box; } /* applied border box to all elements so padding is included within elements width */
+
+        body {
+            /* light grey background with professional font, full viewport height so no matter what size the screen is, the page fills it */
+            /* same font used throughout for a professional appearance, consistency principle lec3 */
+            background-color: #f4f5f7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-navbar {
+            background-color: #0d1b2a;
+            height: 70px; /* fixed height of 70px creates visual balance and consistency across all pages */
+            display: flex; /* aligns all navbar items horizontally */
+            align-items: center; /* vertically centres all items in the navbar */
+            padding: 0 32px;
+            gap: 20px;
+        }
+
+        .brand {
+            /* the white text on dark background makes the logo stand out clearly against the dark navbar background */
+            color: white;
+            font-weight: 800;
+            font-size: 1.15rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap; /* prevents brand text from wrapping onto two lines */
+        }
+
+        .search-wrapper {
+            /* search bar container grows to fill available space up to 500px. in lec3 it was recommended for visuals to have logo on left, search in centre, icons on right */
+            flex: 1;
+            max-width: 500px;
+            position: relative; /* allows search icon to be positioned inside the input */
+        }
+
+        .search-wrapper i {
+            /* search icon absolutely positioned inside the input field. affordance design principle from lec3, the magnifying glass icon signals to users its a search field */
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%); /* perfectly centres icon vertically */
+            color: rgba(255,255,255,0.4);
+        }
+
+        .search-wrapper input {
+            /* search input provides semi-transparent dark styling to match navbar */
+            width: 100%;
+            background: rgba(255,255,255,0.08);
+            border: 1.5px solid rgba(255,255,255,0.12);
+            color: white;
+            border-radius: 25px;
+            padding: 9px 16px 9px 40px; /* left padding 40px creates space for the icon */
+        }
+
+        .search-wrapper input::placeholder {
+            /* placeholder text is lighter than actual input text */
+            color: rgba(255,255,255,0.4);
+        }
+
+        .nav-right {
+            /* right section of navbar, profile circle and logout button. follows alignment principle in lec3 */
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-icon-btn {
+            /* icon buttons: messages, notifications and logout. the hover state background appearing confirms the button is clickable, feedback principle lec3 */
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-size: 1.25rem;
+            padding: 8px 10px;
+            border-radius: 8px;
+        }
+
+        .nav-icon-btn:hover {
+            background: rgba(255,255,255,0.1); /* visual response on hover, feedback principle lec3 */
+            color: white;
+        }
+
+        .profile-circle {
+            /* profile circle shows first letter of username in a blue circle. sky blue to match brand colour throughout portal. circular shape follows similarity gestalt principle in lec3 as users recognise pattern as a profile avatar */
+            background: #0066cc;
+            color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%; /* creates a perfect circle */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .secondary-navbar {
+            /* contains main page navigation links for all team members apps */
+            background-color: #122035;
+            padding: 0 32px;
+            display: flex;
+            gap: 2px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .secondary-navbar a {
+            /* individual navigation links in the secondary navbar, users get immediate visual confirmation of which page they are about to visit, feedback principle lec3 */
+            color: rgba(255,255,255,0.65);
+            text-decoration: none;
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-bottom: 3px solid transparent; /* hidden underline, shown on hover */
+            transition: all 0.2s; /* smooth animation for hover effect */
+            display: flex;
+            align-items: center;
+            gap: 7px; /* space between bootstrap icon and link text */
+        }
+
+        .secondary-navbar a:hover {
+            /* hover state: white text and blue underline appear. user knows which link they are about to click before clicking it */
+            color: white;
+            border-bottom-color: #0066cc;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .main-content {
+            /* following balance principle from lec3 */
+            padding: 32px;
+            max-width: 1400px; /* prevents content becoming too wide on large screens */
+            width: 100%;
+            margin: 0 auto; /* centres content horizontally on wide screens */
+            flex: 1; /* allows this section to grow and fill all available space between the navbar and footer, pushing the footer to the bottom */
+        }
+
+        .btn-sky {
+            /* sky branded button used for key actions like view department. users learn that blue = interactive/clickable throughout the portal, consistency principle lec3 */
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 20px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn-sky:hover {
+            /* darker blue on hover implements feedback principle from lec3, users know the button has responded to their interaction */
+            background-color: #0052a3;
+            color: white;
+        }
+
+        .site-footer {
+            /* matches the top navbar colour creating visual symmetry, balance principle lec3 */
+            background: #0d1b2a;
+            color: rgba(255,255,255,0.5);
+            padding: 28px 32px;
+            font-size: 0.85rem;
+            margin-top: auto; /* pushes footer to the bottom of the page */
+        }
+
+        .site-footer .footer-inner {
+            /* following alignment principles to create professional and readable layout */
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between; /* left and right sections */
+            align-items: center;
+            flex-wrap: wrap; /* wraps to next line on smaller screens */
+            gap: 12px;
+        }
+
+        .site-footer a {
+            /* less visually prominent than main navigation, footer links are secondary to main nav */
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .site-footer a:hover {
+            color: white; /* feedback: becomes fully white on hover */
+        }
+
+        {% block extra_styles %}{% endblock %} /* child templates can implement their own css here, follows dont repeat yourself principle */
+    </style>
+</head>
+
+<body>
+
+<!-- top navbar: contains sky logo, global search bar, messages icon, notifications, profile, logout -->
+<!-- the top navbar implements the visibility design principle from lec3 -->
+<!-- key actions (search, profile, logout) are always visible regardless of which page the user is on -->
+<nav class="top-navbar">
+
+    <!-- brand logo links to the datavis dashboard page -->
+    <!-- like taught in the dynamic urls lec, using named URLs prevents broken links -->
+    <a href="/datavis/" class="brand">
+        <img src="{% static 'core/images/sky_logo.png' %}" height="36" alt="Sky">
+        Engineering Portal
+    </a>
+
+    <!-- global search bar submits GET request to department list page with q parameter -->
+    <!-- search is a key requirement from the brief: allow users to search for teams, departments, and managers quickly -->
+    <!-- the search icon uses the affordance principle from lec3, the magnifying glass communicates this is for searching without any label -->
+    <div class="search-wrapper">
+        <i class="bi bi-search"></i>
+        <form method="get" action="{% url 'organisation:department_list' %}">
+            {% comment %} using url tag as taught in dynamic URLs lec, namespaced URL organisation:department_list resolves to /departments/ {% endcomment %}
+            {% comment %} if the URL path changes in urls.py, this reference updates automatically {% endcomment %}
+            <input type="text" name="q" placeholder="Search teams, departments, managers...">
+        </form>
+    </div>
+
+    <!-- right side of navbar: quick access icons and user profile -->
+    <div class="nav-right">
+        <!-- messages icon, quick access to messaging page, student 3s feature -->
+        <!-- using bootstrap icons for instant visual recognition -->
+        <a href="/messaging/" class="nav-icon-btn" title="Messages">
+            <i class="bi bi-envelope"></i>
+        </a>
+
+        <!-- notifications icon, placeholder for future notification functionality -->
+        <a href="#" class="nav-icon-btn" title="Notifications">
+            <i class="bi bi-bell"></i>
+        </a>
+
+        <!-- django template conditional: only show profile/logout if user is logged in -->
+        <!-- implements the constraints design principle from lec3 -->
+        <!-- unauthenticated users cannot see authenticated only navigation options -->
+        {% if request.user.is_authenticated %}
+            <!-- profile circle shows first letter of username -->
+            <!-- username|first gets the first character, |upper converts it to uppercase -->
+            <!-- e.g. username shaista becomes S in the blue circle -->
+            <a href="{% url 'core:profile' %}" class="profile-circle">
+                {{ request.user.username|first|upper }}
+            </a>
+
+            <!-- logout button uses djangos named URL with app namespace core -->
+            <!-- as taught in dynamic URLs lec, app_name core in urls.py allows url core:logout to resolve correctly -->
+            <a href="{% url 'core:logout' %}" class="nav-icon-btn" title="Logout">
+                <i class="bi bi-box-arrow-right"></i>
+            </a>
+        {% else %}
+            <!-- if user is not logged in, show login button instead of profile and logout -->
+            <a href="{% url 'core:login' %}" class="btn-sky">Login</a>
+        {% endif %}
+    </div>
+</nav>
+
+<!-- secondary navbar: contains links to all sections of the application -->
+<!-- each link uses a bootstrap icon to show affordance principle from lec3 -->
+<!-- following the continuity gestalt principle from lec3, navigation items flow left to right -->
+<!-- as teammates complete their individual apps and push to github, their pages are added here -->
+<nav class="secondary-navbar">
+    <!-- dashboard: student 6s data visualisation page -->
+    <a href="/datavis/">
+        <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
+
+    <!-- student 2s department list page, uses named URL with namespace -->
+    <a href="{% url 'organisation:department_list' %}">
+        <i class="bi bi-building"></i> Department
+    </a>
+
+    <!-- student 4s schedule page -->
+    <a href="/schedule/">
+        <i class="bi bi-calendar3"></i> Schedule
+    </a>
+
+    <!-- student 1s teams page -->
+    <a href="/teams/">
+        <i class="bi bi-people"></i> Teams
+    </a>
+
+    <!-- student 2s organisation chart page, shows how teams relate to each other with dependencies -->
+    <a href="{% url 'organisation:organisation_chart' %}">
+        <i class="bi bi-diagram-3"></i> Organisation
+    </a>
+
+    {% block extra_nav %}{% endblock %}
+</nav>
+
+<!-- main content area: block content is replaced by each child templates unique content -->
+<!-- this is the core of djangos template inheritance system -->
+<!-- base.html defines the shared layout and child templates fill in the content -->
+<div class="main-content">
+    <!-- django messages framework: displays success/error notifications -->
+    <!-- e.g. profile updated successfully or invalid username or password -->
+    <!-- implements the feedback design principle from lec3 -->
+    {% if messages %}
+        {% for message in messages %}
+            <!-- alert colour set dynamically: success = green, error = red, warning = yellow -->
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <!-- x button allows user to dismiss the alert when they have read it -->
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</div>
+
+<!-- footer: dark footer matching the top navbar creates visual symmetry, balance principle lec3 -->
+<!-- contains portal name on the left and quick navigation links on the right -->
+<!-- footer links repeat key navigation so users dont need to scroll back to the top -->
+<!-- supports visibility principle from lec3, navigation always accessible regardless of scroll position -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <!-- left side: portal name and internal use disclaimer -->
+        <div>
+            <strong style="color: white;">Sky Engineering Portal</strong>
+            &nbsp;· Internal use only
+        </div>
+
+        <!-- right side: quick navigation links -->
+        <div>
+            <a href="{% url 'organisation:department_list' %}">Department</a>
+            <a href="{% url 'organisation:organisation_chart' %}">Organisation</a>
+
+            <!-- profile and logout links only shown to authenticated users -->
+            <!-- constraints principle lec3: non logged in users dont see options they cannot use -->
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'core:profile' %}">Profile</a>
+                <a href="{% url 'core:logout' %}">Logout</a>
+            {% endif %}
+        </div>
+    </div>
+</footer>
+
+<!-- bootstrap javascript bundle required for interactive components -->
+<!-- such as the dismissible alert close button in the messages section above -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- block extra_scripts: child templates can add their own javascript here -->
+{% block extra_scripts %}{% endblock %}
+
+</body>
+</html>
